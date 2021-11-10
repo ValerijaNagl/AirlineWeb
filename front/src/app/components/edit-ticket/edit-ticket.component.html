@@ -1,0 +1,33 @@
+<div class="container">
+  <header>
+    <p>User: {{user.username}} </p>
+    <p> Type: {{user.type}} </p>
+</header>
+    <br>
+    <form [formGroup]="editTicketForm" (ngSubmit)="submitForm(editTicketForm.value)">
+      <div class="container">
+        <h3>Edit ticket</h3>
+       
+        <div class="form-group">
+          
+          <input type="date" ng-model="departdate" value="{{ departdate }}"  placeholder="Required" class="form-control"  formControlName="departDate" />
+          <input type="date" ng-model="returndate" value="{{ returndate }}"  placeholder="Required" class="form-control"  formControlName="returnDate" />
+        
+          <input type="number" class="form-control mb-3" formControlName="count" [(ngModel)]="ticket.count">
+
+          <select class="form-select mb-3" aria-label=".form-select-lg example" formControlName="airlineForm">
+            <option value="" selected disabled hidden>Choose</option>
+            <option *ngFor="let a of airlines" [value]='a.id'>{{a.name}}</option>
+          </select>
+
+          <select class="form-select mb-3" aria-label=".form-select-lg example" formControlName="flightForm">
+            <option value="" selected disabled hidden>Choose</option>
+            <option *ngFor="let f of flights" [value]='f.id'>{{f.origin.name}} - {{f.destination.name}}</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary" [disabled]="!editTicketForm.valid">Edit</button>
+      </div>
+    </form>
+    <br>
+    <button type="submit" class="btn btn-primary" (click)="goToHomePage($event)">Cancel</button>
+</div>

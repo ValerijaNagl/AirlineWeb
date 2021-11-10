@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <meta charset="UTF-8">
+    <title>Student App</title>
+</head>
+<body>
+<table border="1">
+    <tr th:each="student : ${students}">
+        <td th:text="${student.firstName}"></td>
+        <td th:text="${student.lastName}"></td>
+        <td th:text="${student.address}"></td>
+    </tr>
+</table>
+<br>
+<div th:text="'Last edited:' + ${theDate}" class="dateClass"></div>
+<br>
+</div>
+<div>
+    <a href="/" th:href="@{/fetch}">
+        Redirect and fetch data
+    </a>
+
+</div>
+<div value="Showing first names shorter than 5 characters using is/ unless."></div><br>
+<table border="1">
+    <tr th:each="student : ${students}">
+        <td th:if="${student.firstName.length() < 5}" th:text="${student.firstName}"></td>
+        <td th:unless="${student.firstName.length() < 5}" th:text="'First name is too long!'"></td>
+        <td th:text="${student.lastName}"></td>
+    </tr>
+</table>
+</body>
+</html>

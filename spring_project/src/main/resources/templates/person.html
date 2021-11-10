@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <meta charset="UTF-8">
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+          crossorigin="anonymous">
+
+    <title>Fetched data from another REST App</title>
+</head>
+<body>
+    <table border="1">
+        <tr th:each="person : ${data}">
+            <td th:text="${person.firstName}"></td>
+            <td th:text="${person.lastName}"></td>
+        </tr>
+    </table>
+    <br>
+    <br>
+    <form th:action="@{/fetch}" method="post" enctype="multipart/form-data">
+
+        <div class = "form-group">
+            <label for ="firstName"> First Name </label> :
+            <input type="text" class = "form-control" id ="firstName" name = "firstName"
+                   placeholder="Enter First Name" autofocus="autofocus">
+        </div>
+
+        <div class="form-group">
+            <label for="lastName">Last Name</label>: <input type="lastName"
+                                                           id="lastName" name="lastName" class="form-control"
+                                                           placeholder="Enter Last Name" />
+        </div>
+
+        <div class="form-group">
+            <div class="row">
+                <div class="col-sm-6 col-sm-offset-3">
+                    <input type="submit" name="create-submit" id="create-submit"
+                           class="form-control btn btn-primary" value="Create" />
+                </div>
+            </div>
+        </div>
+    </form>
+
+</body>
+</html>

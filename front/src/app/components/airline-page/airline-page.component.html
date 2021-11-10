@@ -1,0 +1,93 @@
+<div class="container">
+ 
+    <td><button (click)="logout($event)">Logout</button> </td>
+
+<header>
+  <p>User: {{user.username}} </p>
+  <p> Type: {{user.type}} </p>
+  <input *ngIf="!isAdmin" type="button" [routerLink]="['/bookings']" value="Bookings: {{user.bookings.length}}">
+</header>
+
+
+<form *ngIf="!isAdmin" [formGroup]="searchForm" (ngSubmit)="searchTickets(searchForm.value)">
+  <div class="container">
+    <h3>Search</h3>
+    <div class="form-group">
+
+      <input type="text" class="form-control mb-3" placeholder="Origin" formControlName="origin">
+      <input type="text" class="form-control mb-3" placeholder="Destination" formControlName="destination">
+      <input type="date" class="form-control mb-3" placeholder="DepartDate" formControlName="departDate">
+      <input type="date" class="form-control mb-3" placeholder="ReturnDate" formControlName="returnDate">
+      <select class="form-select mb-3" aria-label=".form-select-lg example" formControlName="oneway">
+        <option value="" selected disabled hidden>Choose</option>
+        <option value="all">All</option>
+        <option value="oneWay">oneWay</option>
+        <option value="twoWay">twoWay</option>
+      </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Search</button>
+  </div>
+</form>
+
+<hr>
+
+
+<br>
+<h3>{{airline.name}}</h3>
+<button *ngIf="isAdmin" (click)="deleteAirline($event,airline.id)">Delete airline</button>
+<br><br>
+<h5>Tickets by airline</h5><br>
+<div class="tableDiv">
+  <table>
+    <tr>
+      <th>Airline</th>
+      <th>One way</th>
+      <th>Depart date</th>
+      <th>Return date</th>
+      <th>Origin</th>
+      <th>Destination</th>
+      <th>Count</th>
+    </tr>
+    <tr *ngFor="let ticket of tickets">
+      <td>{{ticket.airline.name}}</td>
+      <td>{{ticket.oneway}}</td>
+      <td>{{ticket.departDate | date:'dd-MM-yyyy' }}</td>
+      <td>{{ticket.returnDate | date:'dd-MM-yyyy' }}</td>
+      <td>{{ticket.flight.origin.name}}</td>
+      <td>{{ticket.flight.destination.name}}</td>
+      <td>{{ticket.count}}</td>
+      <td><input *ngIf="isAdmin" type="button" [routerLink]="['/editTicket', ticket.id]" value="Edit"></td>
+      <td><button *ngIf="canUserBookATicket(event,ticket) && !isAdmin" (click)="bookTicket($event,ticket)">Book</button> </td>
+      <td><button *ngIf="isAdmin" (click)="deleteTicket($event,ticket.id)">Delete</button> </td>
+    </tr>
+
+  </table>
+</div>
+  </div>
+  <hr>
+
+  <div *ngIf="isAdmin" class="col-sm-4" class="container">
+    <h3>New airline company</h3>
+    <form  [formGroup]="newAirlineForm" (ngSubmit)="createAirline(newAirlineForm.value)">
+      <div class="form-group">
+        <input type="text" class="form-control" placeholder="Name" formControlName="newairline">
+        <div class="error-message" *ngIf="newairline.errors?.required"> Name is required! </div>
+      </div>
+      <button type="submit" class="btn btn-primary" [disabled]="!newAirlineForm.valid">Create</button>
+    </form>
+  </div>
+
+  <hr>
+
+  <div *ngIf="isAdmin" class="col-sm-4" class="container">
+    <h3>Change airline name</h3>
+    <form  [formGroup]="changeAirlineForm" (ngSubmit)="changeAirline(changeAirlineForm.value)">
+      <div class="form-group">
+        <input type="text" class="form-control" placeholder="Name" formControlName="changeairline">
+        <div class="error-message" *ngIf="changeairline.errors?.required"> Name is required! </div>
+      </div>
+      <button type="submit" class="btn btn-primary" [disabled]="!changeAirlineForm.valid">Change</button>
+    </form>
+  </div>
+
+

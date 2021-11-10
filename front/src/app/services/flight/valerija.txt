@@ -1,0 +1,118 @@
+/******************************************************************************
+
+                            Online C Compiler.
+                Code, Compile, Run and Debug C program online.
+Write your code in this editor and press "Run" button to compile and execute it.
+
+*******************************************************************************/
+
+#include <stdio.h>
+#include <string.h>
+
+
+char rezultat[100];
+int brojac=0;
+
+int nadjiIndeksOdSledeceZatvoreneZagrade(int indexOtvorenaZagrada, char *rec){
+
+    int i;
+    for(int i=indexOtvorenaZagrada+1; i<strlen(rec); i++){
+        if(rec[i]==')') return i;
+    }
+
+    return -1;
+}
+
+
+
+void izbaciDuplikateIzPodstringa(int indexOtvorenaZagrada, int indexZatvorenaZagrada, char *rec){
+
+    int i,j, br=0;
+
+
+    char obrnutiString[50];
+
+    /* prolazimo kroz rec s desna na levo (unatraske). Ukoliko se desi da postoji isto slovo pre slova koje trenutno
+       posmatramo, onda cemo trenutno slovo ignorisati, i jednom trenutku cemo doci do slova koji nema duplikat ispred sebe, i
+       njega stavljamo u rezultujuci string.
+       Primer: imamo string knaan. Pocinjemo od poslednjeg n. Pre poslednjeg n ima n na drugom mestu, pa poslednje n ignorisemo.
+       Dolazimo do a na cetvrtom mestu, ali posto na trecem mestu ima a, ignorisemo ga. Dolazimo do a na trecem mestu, posto
+       nema jos neko a pre njega, a na trecem mestu smestamo u rezultujuci string. Tako se desava i za n i k.
+
+       Posto smo sve vreme prolazili kroz string unazad, unazad smo i smestali slova u privremeni string,
+       pa se u rezultujuci string smesta podstring u odgovarajucem redosledu.
+       */
+
+
+    for(int i=indexZatvorenaZagrada; i>indexOtvorenaZagrada; i--){
+        int flag = 0;
+        for(int j=i-1; i>=indexOtvorenaZagrada; i--){
+            if(rec[i] == rec[j]) flag=1;
+        }
+
+        if(flag == 0){
+          obrnutiString[br++] = rec[i];
+        }
+    }
+
+    // prvo slovo u reci je sigurno unikatno jer se nalazi na prvom mestu
+    obrnutiString[br++] = rec[indexOtvorenaZagrada];
+
+    // smestamo podstring u rezultujuci u odgovarajucem redosledu
+    for(int i=br-1; i>=0; i--){
+        rezultat[brojac++] = obrnutiString[i];
+    }
+
+
+}
+
+
+
+
+
+int main(){
+
+    char rec[100];
+
+    scanf("%s", rec);
+
+
+    int i, otvorenaZagrada = -1, zatvorenaZagrada = -1;
+
+    for(int i=0; i<strlen(rec); i++){
+
+        if(rec[i]=='('){
+            otvorenaZagrada = i;
+            zatvorenaZagrada = nadjiIndeksOdSledeceZatvoreneZagrade(i, rec);
+
+            printf("otvorena %d zatvorena %d", otvorenaZagrada,zatvorenaZagrada);
+
+            if(zatvorenaZagrada == -1){
+                printf("String nije validan, jer postoji postring u kome je zagrada otvorena, ali nikad nije zatvorena.");
+                return 0;
+            }
+            izbaciDuplikateIzPodstringa(i, zatvorenaZagrada, rec);
+            continue;
+        }else{
+            if(otvorenaZagrada!=-1 && zatvorenaZagrada!=-1 && otvorenaZagrada<zatvorenaZagrada){
+                if(i>otvorenaZagrada && i<zatvorenaZagrada){
+                    continue;
+                }else{
+                    rezultat[brojac++] = rec[i];
+                }
+
+            }else{
+              rezultat[brojac++] = rec[i];
+            }
+
+        }
+    }
+
+    rezultat[brojac++] = '\0';
+    printf("%s",rezultat);
+
+
+    return 0;
+
+
+}
